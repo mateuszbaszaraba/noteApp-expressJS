@@ -36,6 +36,8 @@ const requestLogger = (request, response, next) => {
 
 app.use(requestLogger);
 
+app.use(express.static('build'));
+
 const generateId = () => {
   const maxId = notes.length > 0 ? Math.max(...notes.map((n) => id)) : 0;
   return maxId + 1;
