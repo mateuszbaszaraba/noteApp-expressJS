@@ -1,32 +1,12 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const mongoose = require('mongoose');
-const { user, password } = require('./key');
+const Note = require('./models/note');
 
 const app = express();
 
 app.use(express.json());
 app.use(cors());
-
-const url = `mongodb+srv://${user}:${password}@cluster0.bwekvqb.mongodb.net/noteApp?retryWrites=true&w=majority`;
-
-mongoose.connect(url);
-
-const noteSchema = new mongoose.Schema({
-  content: String,
-  date: Date,
-  important: Boolean,
-});
-
-noteSchema.set('toJSON', {
-  transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString();
-    delete returnedObject._id;
-    delete returnedObject.__v;
-  },
-});
-
-const Note = mongoose.model('Note', noteSchema);
 
 const requestLogger = (request, response, next) => {
   console.log('Method:', request.method);
@@ -102,7 +82,7 @@ const unknownEndpoint = (request, response, next) => {
 
 app.use(unknownEndpoint);
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
