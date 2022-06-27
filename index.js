@@ -1,30 +1,24 @@
 const express = require('express');
 const cors = require('cors');
+const mongoose = require('mongoose');
+const { user, password } = require('./key');
+
 const app = express();
 
 app.use(express.json());
 app.use(cors());
 
-let notes = [
-  {
-    id: 1,
-    content: 'HTML is easy',
-    date: '2022-05-30T17:30:31.098Z',
-    important: true,
-  },
-  {
-    id: 2,
-    content: 'Browser can execute only Javascript',
-    date: '2022-05-30T18:39:34.091Z',
-    important: false,
-  },
-  {
-    id: 3,
-    content: 'GET and POST are the most important methods of HTTP protocol',
-    date: '2022-05-30T19:20:14.298Z',
-    important: true,
-  },
-];
+const url = `mongodb+srv://${user}:${password}@cluster0.bwekvqb.mongodb.net/noteApp?retryWrites=true&w=majority`;
+
+mongoose.connect(url);
+
+const noteSchema = new mongoose.Schema({
+  content: String,
+  date: Date,
+  important: Boolean,
+});
+
+const Note = mongoose.model('Note', noteSchema);
 
 const requestLogger = (request, response, next) => {
   console.log('Method:', request.method);
@@ -48,7 +42,7 @@ app.get('/', (request, response) => {
 });
 
 app.get('/api/notes', (request, response) => {
-  response.json(notes);
+  Note.find({}).then((notes) => response.json(notes));
 });
 
 app.post('/api/notes', (request, response) => {
