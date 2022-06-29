@@ -14,6 +14,12 @@ const initialNotes = [
   },
 ];
 
+const initialUser = {
+  username: "testingUser",
+  name: "testName",
+  password: "something",
+};
+
 const generateNonExistingId = async () => {
   const note = new Note({ content: "nth important", date: new Date() });
   await note.save();
@@ -29,13 +35,12 @@ const notesInDb = async () => {
 
 const usersInDb = async () => {
   const users = await User.find({});
-  console.log(users);
-  console.log(users[0].toJSON());
   return users.map((u) => u.toJSON());
 };
 
 module.exports = {
   initialNotes,
+  initialUser,
   generateNonExistingId,
   notesInDb,
   usersInDb,

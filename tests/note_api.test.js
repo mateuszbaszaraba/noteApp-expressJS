@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const supertest = require("supertest");
 const app = require("../app");
 const Note = require("../models/note.js");
+const User = require("../models/user");
 const helper = require("./test_helper");
 
 const api = supertest(app);
@@ -9,6 +10,16 @@ const api = supertest(app);
 beforeEach(async () => {
   await Note.deleteMany({});
   await Note.insertMany(helper.initialNotes);
+
+  await User.deleteMany({});
+
+  const newUser = helper.initialUser;
+
+  await api
+    .post("/api/users")
+    .send(newUser)
+    .expect(201)
+    .expect("Content-Type", /application\/json/);
 });
 
 describe("when there is initially some notes saved", () => {
@@ -70,8 +81,20 @@ describe("addition of a new note", () => {
       important: true,
     };
 
+    const userCredentials = {
+      username: "testingUser",
+      password: "something",
+    };
+
+    const res = await api
+      .post("/api/login")
+      .send(userCredentials)
+      .expect(200)
+      .expect("Content-Type", /application\/json/);
+
     await api
       .post("/api/notes")
+      .set({ Authorization: `bearer ${res.body.token}` })
       .send(newNote)
       .expect(201)
       .expect("Content-Type", /application\/json/);
@@ -88,7 +111,23 @@ describe("addition of a new note", () => {
       important: true,
     };
 
-    await api.post("/api/notes").send(newNote).expect(400);
+    const userCredentials = {
+      username: "testingUser",
+      password: "something",
+    };
+
+    const res = await api
+      .post("/api/login")
+      .send(userCredentials)
+      .expect(200)
+      .expect("Content-Type", /application\/json/);
+
+    await api
+      .post("/api/notes")
+      .set({ Authorization: `bearer ${res.body.token}` })
+      .send(newNote)
+      .expect(400)
+      .expect("Content-Type", /application\/json/);
 
     const notesAtEnd = await helper.notesInDb();
 
