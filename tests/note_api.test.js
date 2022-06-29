@@ -53,8 +53,6 @@ describe("viewing a specific note", () => {
   test("fails with statuscode 404 if note does not exist", async () => {
     const validNonexistingId = await helper.generateNonExistingId();
 
-    console.log(validNonexistingId);
-
     await api.get(`/api/notes/${validNonexistingId}`).expect(404);
   });
 
@@ -68,7 +66,7 @@ describe("viewing a specific note", () => {
 describe("addition of a new note", () => {
   test("succeeds with valid data", async () => {
     const newNote = {
-      content: "async/await simplifies making async calls",
+      content: "some testing note",
       important: true,
     };
 
@@ -82,7 +80,7 @@ describe("addition of a new note", () => {
     expect(notesAtEnd).toHaveLength(helper.initialNotes.length + 1);
 
     const contents = notesAtEnd.map((n) => n.content);
-    expect(contents).toContain("async/await simplifies making async calls");
+    expect(contents).toContain("some testing note");
   });
 
   test("fails with status code 400 if data invaild", async () => {
