@@ -2,6 +2,7 @@ POST http://localhost:3001/api/notes/
 Content-Type: application/json
 
 {
-  "content": "from vscode",
-  "important": true
+  "content": "another note from vscode with user",
+  "important": true,
+  "userId": "62bbe10c1dc9fc0e05de5aef"
 }
