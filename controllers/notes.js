@@ -36,6 +36,20 @@ const getTokenFrom = (request) => {
  *         date: 2022-06-27T13:41:12.306Z
  *         important: false
  *         id: 62b9b378e1aa8ecefa401d78
+ *     PostNote:
+ *       type: object
+ *       required:
+ *         - content
+ *       properties:
+ *         content:
+ *           type: string
+ *           description: Content of the note
+ *         important:
+ *           type: boolean
+ *           description: Inportance of the note
+ *       example:
+ *         content: Some interesting content
+ *         important: false
  */
 
 /**
@@ -98,6 +112,25 @@ notesRouter.get("/:id", async (request, response, next) => {
     return response.status(404).end();
   }
 });
+
+/**
+ * @swagger
+ * /api/notes:
+ *  post:
+ *    summary: Create new note
+ *    tags: [Notes]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/PostNote'
+ *    security:
+ *      - bearerAuth: []
+ *    responses:
+ *      200:
+ *        description: success
+ */
 
 notesRouter.post("/", async (request, response, next) => {
   const body = request.body;

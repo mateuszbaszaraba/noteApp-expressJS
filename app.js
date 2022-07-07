@@ -20,6 +20,18 @@ const swaggerOptions = {
       version: "1.0.0",
       description: "Last update: 07.07.2022",
     },
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+    },
+    security: {
+      bearerAuth: [],
+    },
   },
   apis: ["./controllers/*.js"],
 };
