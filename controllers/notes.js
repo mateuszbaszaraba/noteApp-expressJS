@@ -11,10 +11,84 @@ const getTokenFrom = (request) => {
   return null;
 };
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     GetNote:
+ *       type: object
+ *       properties:
+ *         content:
+ *           type: string
+ *           description: Content of the note
+ *         date:
+ *           type: string
+ *           format: date
+ *           description: Creation date of the note
+ *         important:
+ *           type: boolean
+ *           description: Inportance of the note
+ *         id:
+ *           type: string
+ *           description: Id of the note
+ *       example:
+ *         content: Some interesting content
+ *         date: 2022-06-27T13:41:12.306Z
+ *         important: false
+ *         id: 62b9b378e1aa8ecefa401d78
+ */
+
+/**
+ * @swagger
+ * tags:
+ *   name: Notes
+ *   description: The notes managing API
+ */
+
+/**
+ * @swagger
+ * /api/notes:
+ *   get:
+ *     summary: Returns the list of all the notes
+ *     tags: [Notes]
+ *     responses:
+ *       200:
+ *         description: The list of the Notes
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/GetNote'
+ */
+
 notesRouter.get("/", async (request, response) => {
   const notes = await Note.find({}).populate("user", { username: 1, name: 1 });
   response.json(notes);
 });
+
+/**
+ * @swagger
+ * /api/notes/{$id}:
+ *   get:
+ *     summary: Get the note by ID
+ *     tags: [Notes]
+ *     parameters:
+ *      - in: path
+ *        name: id
+ *        schema:
+ *          type: string
+ *        required: true
+ *     responses:
+ *       200:
+ *         description: The list of the Notes
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/GetNote'
+ *       404:
+ *         description: Note with this ID not found
+ */
 
 notesRouter.get("/:id", async (request, response, next) => {
   const note = await Note.findById(request.params.id);
