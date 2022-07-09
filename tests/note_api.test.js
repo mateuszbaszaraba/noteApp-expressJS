@@ -22,7 +22,7 @@ beforeEach(async () => {
     .expect("Content-Type", /application\/json/);
 });
 
-describe("when there is initially some notes saved", () => {
+describe("when there are initially some notes saved", () => {
   test("notes are returned as json", async () => {
     await api
       .get("/api/notes")
